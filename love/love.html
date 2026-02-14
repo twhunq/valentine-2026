@@ -129,6 +129,23 @@
         $('body').removeClass('preloading');
         $('.loadingLove').delay(1000).fadeOut('fast');
 
+        // Audio Autoplay Fix for Safari/Chrome
+        const audio = document.querySelector("audio");
+        if (audio) {
+            audio.play().catch(error => {
+                // Auto-play was prevented
+                // Show a UI element to let the user manually start playback
+                console.log("Autoplay prevented. Waiting for user interaction.");
+                const playAudio = () => {
+                    audio.play();
+                    document.removeEventListener('click', playAudio);
+                    document.removeEventListener('touchstart', playAudio);
+                };
+                document.addEventListener('click', playAudio);
+                document.addEventListener('touchstart', playAudio);
+            });
+        }
+
 
         function getHeart(e) {
             let ele = document.createElement("div");
